@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<body style="background-color: black">
+	<meta charset="utf-8"/>
+	<title>PIXEL - SYNGENTA</title>
+	<img id="syngenta" src="syngenta.bmp" alt="" width="420" height="300" hidden="hidden">
+	<center>
+		<canvas id="myCanvas" width="420" height="300" style="padding-top: 12%">
+		Your browser does not support the HTML5 canvas tag.</canvas>
+	</center>
+<script>
+	document.getElementById("syngenta").onload = function() {
+		var c = document.getElementById("myCanvas");
+		var ctx = c.getContext("2d");
+		var img = document.getElementById("syngenta");
+		ctx.drawImage(img, 0, 0);
+		var imgData = ctx.getImageData(0, 0, c.width, c.height);
+		//Vetoriza a imagem bitmap em um array de pixels RGBA
+		var i;
+		var w=0, b=0; //Pixels pretos e brancos
+		for (i = 0; i < imgData.data.length; i += 4) {
+			if (imgData.data[i]==0) {
+				if (imgData.data[i+1]==0) {
+					if (imgData.data[i+2]==0) {
+						b++;
+					}
+				}
+			}
+			if (imgData.data[i]==255) {
+				if (imgData.data[i+1]==255) {
+					if (imgData.data[i+2]==255) {
+						w++;
+					}
+				}
+			}
+		}
+		//imgData.data nos da as 4 informações de RGBA de cada pixel
+		alert("Total de pixels visíveis na imagem: "+imgData.data.length/4+
+			".  |  Pixels pretos: "+b+
+			".  |  Pixels coloridos ou brancos: "+((imgData.data.length/4)-b)+
+			".  |  Pixels inteiramente brancos: "+w+
+			".  |  Pixels verdes: "+((imgData.data.length/4)-b-w));
+		// DESAFIO #2: EXPÕE O TEXTO APENAS COM OS PIXELS BRANCOS
+		for (i = 0; i < imgData.data.length; i += 4) {
+			if (imgData.data[i]<255) {
+				imgData.data[i]=0;
+				imgData.data[i+1]=0;
+				imgData.data[i+2]=0;
+			}
+		}
+		ctx.putImageData(imgData, 0, 0);
+	};
+</script>
+
+</body>
+</html>
